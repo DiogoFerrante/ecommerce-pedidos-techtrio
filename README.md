@@ -94,7 +94,8 @@ Projeto acadêmico — Faculdade de Tecnologia SENAI "Antonio Adolpho Lobbe".
 
 ## Divisão de Trabalho
 
-|Nome|Oque vai Fazer|
-|Diogo|Cadastro e gerenciamento de produtos, Cadastro e gerenciamento de clientes e Criação e gerenciamento de pedidos|
-|Breno|Processamento de pagamentos (cartão, boleto, Pix) e Testes automatizados (unitários e de integração)|
-|Ana|Pipeline de CI/CD e API REST para consumo por um front-end|
+| Nome | Oque vai fazer |
+|---|---|
+| _Diogo Antonio Ferrante_ | Cadastro e gerenciamento de produtos, Cadastro e gerenciamento de clientes e Criação e gerenciamento de pedidos|
+| _Ana Beatriz Viotto_ | Pipeline de CI/CD e API REST para consumo por um front-end|
+| _Breno Xavier_ | Processamento de pagamentos (cartão, boleto, Pix) e Testes automatizados (unitários e de integração)|
