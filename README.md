@@ -9,4 +9,4 @@ Este módulo tem como objetivo automatizar o processo de desenvolvimento, integr
 - Validação do código
 - Build automatizado da aplicação
 - Entrega contínua das versões do sistema
-- Automatização do processo de implantação
+- Automatização do processo de implantaçãoo
