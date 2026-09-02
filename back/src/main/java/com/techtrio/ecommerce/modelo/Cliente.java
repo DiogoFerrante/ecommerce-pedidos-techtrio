@@ -3,25 +3,26 @@ package com.techtrio.ecommerce.modelo;
 public class Cliente {
 
     private String nome;
-    private String cpf;
+    private String documento;
     private String email;
     private String telefone;
     private String endereco;
 
-    public Cliente(String nome, String cpf, String email, String telefone, String endereco) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.email = email;
-        this.telefone = telefone;
-        this.endereco = endereco;
+    public Cliente(String nome, String documento, String email,
+                   String telefone, String endereco) {
+        setNome(nome);
+        setDocumento(documento);
+        setEmail(email);
+        setTelefone(telefone);
+        setEndereco(endereco);
     }
 
     public String getNome() {
         return nome;
     }
 
-    public String getCpf() {
-        return cpf;
+    public String getDocumento() {
+        return documento;
     }
 
     public String getEmail() {
@@ -37,10 +38,48 @@ public class Cliente {
     }
 
     public void setNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
+        if (!nome.equals(nome.trim())) {
+            throw new IllegalArgumentException(
+                    "Nome não pode ter espaços nas pontas"
+            );
+        }
+
         this.nome = nome;
     }
 
+    public void setDocumento(String documento) {
+        if (documento == null || documento.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Documento é obrigatório"
+            );
+        }
+
+        if (!documento.matches("\\d+")) {
+            throw new IllegalArgumentException(
+                    "Documento deve conter somente dígitos"
+            );
+        }
+
+        this.documento = documento;
+    }
+
     public void setEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "E-mail é obrigatório"
+            );
+        }
+
+        if (!email.contains("@")) {
+            throw new IllegalArgumentException(
+                    "E-mail deve conter @"
+            );
+        }
+
         this.email = email;
     }
 
@@ -53,14 +92,14 @@ public class Cliente {
     }
 
     public String getIdentificacao() {
-        return nome + " (" + cpf + ")";
+        return nome + " (" + documento + ")";
     }
 
     @Override
     public String toString() {
         return "Cliente{" +
                 "nome='" + nome + '\'' +
-                ", cpf='" + cpf + '\'' +
+                ", documento='" + documento + '\'' +
                 ", email='" + email + '\'' +
                 ", telefone='" + telefone + '\'' +
                 ", endereco='" + endereco + '\'' +
