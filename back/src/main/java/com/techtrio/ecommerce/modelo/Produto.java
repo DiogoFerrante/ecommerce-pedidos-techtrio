@@ -1,92 +1,102 @@
 package com.techtrio.ecommerce.modelo;
 
+import java.math.BigDecimal;
+
 public class Produto {
 
     private String codigo;
     private String nome;
-    private String descricao;
-    private double preco;
+    private BigDecimal preco;
     private int quantidadeEmEstoque;
-    private boolean ativo;
 
-    public Produto() {
-        this.ativo = true;
-    }
-
-    public Produto(String codigo, String nome, String descricao,
-                   double preco, int quantidadeEmEstoque) {
-        this.codigo = codigo;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.quantidadeEmEstoque = quantidadeEmEstoque;
-        this.ativo = true;
+    public Produto(String codigo, String nome, BigDecimal preco, int quantidadeEmEstoque) {
+        setCodigo(codigo);
+        setNome(nome);
+        setPreco(preco);
+        setQuantidadeEmEstoque(quantidadeEmEstoque);
     }
 
     public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
     }
 
     public int getQuantidadeEmEstoque() {
         return quantidadeEmEstoque;
     }
 
+    public void setCodigo(String codigo) {
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Código é obrigatório");
+        }
+
+        this.codigo = codigo.trim();
+    }
+
+    public void setNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nome é obrigatório");
+        }
+
+        if (!nome.equals(nome.trim())) {
+            throw new IllegalArgumentException("Nome não pode ter espaços nas pontas");
+        }
+
+        this.nome = nome;
+    }
+
+    public void setPreco(BigDecimal preco) {
+        if (preco == null || preco.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Preço não pode ser negativo");
+        }
+
+        this.preco = preco;
+    }
+
     public void setQuantidadeEmEstoque(int quantidadeEmEstoque) {
+        if (quantidadeEmEstoque < 0) {
+            throw new IllegalArgumentException(
+                    "Quantidade em estoque não pode ser negativa"
+            );
+        }
+
         this.quantidadeEmEstoque = quantidadeEmEstoque;
     }
 
-    public boolean isAtivo() {
-        return ativo;
-    }
+    public boolean temEstoqueDisponivel(int quantidade) {
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException(
+                    "Quantidade deve ser maior que zero"
+            );
+        }
 
-    public boolean temEstoqueDisponivel(int quantidadeDesejada) {
-        return ativo && quantidadeDesejada > 0
-                && quantidadeEmEstoque >= quantidadeDesejada;
+        return quantidadeEmEstoque >= quantidade;
     }
 
     public void baixarEstoque(int quantidade) {
-        if (temEstoqueDisponivel(quantidade)) {
-            quantidadeEmEstoque -= quantidade;
+        if (!temEstoqueDisponivel(quantidade)) {
+            throw new IllegalArgumentException(
+                    "Estoque insuficiente"
+            );
         }
+
+        quantidadeEmEstoque -= quantidade;
     }
 
     @Override
     public String toString() {
-        return String.format(
-            "[%s] %s - %s - R$ %.2f (%d em estoque)",
-            codigo,
-            nome,
-            descricao,
-            preco,
-            quantidadeEmEstoque
-        );
+        return "Produto{" +
+                "codigo='" + codigo + '\'' +
+                ", nome='" + nome + '\'' +
+                ", preco=" + preco +
+                ", quantidadeEmEstoque=" + quantidadeEmEstoque +
+                '}';
     }
 }
