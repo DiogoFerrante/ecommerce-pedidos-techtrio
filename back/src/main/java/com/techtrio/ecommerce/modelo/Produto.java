@@ -1,6 +1,5 @@
 package com.techtrio.ecommerce.modelo;
 
-
 public class Produto {
 
     private String codigo;
@@ -10,40 +9,84 @@ public class Produto {
     private int quantidadeEmEstoque;
     private boolean ativo;
 
-    public Produto(){
+    public Produto() {
         this.ativo = true;
     }
 
-    public String getNome(){
-        return this.nome;
-    }
-
-    public void setNome(String nome){
-        this.nome = nome;
-    }
-
-    public boolean isAtivo(){
-        return ativo;
-    }
-
-    public boolean temEstoqueDisponivel(int quantidadeDesejada){
-        return ativo && quantidadeEmEstoque >= quantidadeDesejada;
-    }
-
-    @Override
-    public String toString(){
-        return String.format("[%s] %s %s - R$ %.2f (%d em estoque)", this.codigo, this.nome, this.descricao, this.preco, this.quantidadeEmEstoque);
-    }   
-
-    public void baixarEstoque(int quantidade){
-        this.quantidadeEmEstoque = this.quantidadeEmEstoque - quantidade;
-    }
-
-    public Produto( String codigo, String nome, String descricao, double preco, int quantidadeEmEstoque){
+    public Produto(String codigo, String nome, String descricao,
+                   double preco, int quantidadeEmEstoque) {
         this.codigo = codigo;
         this.nome = nome;
+        this.descricao = descricao;
         this.preco = preco;
         this.quantidadeEmEstoque = quantidadeEmEstoque;
         this.ativo = true;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public int getQuantidadeEmEstoque() {
+        return quantidadeEmEstoque;
+    }
+
+    public void setQuantidadeEmEstoque(int quantidadeEmEstoque) {
+        this.quantidadeEmEstoque = quantidadeEmEstoque;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public boolean temEstoqueDisponivel(int quantidadeDesejada) {
+        return ativo && quantidadeDesejada > 0
+                && quantidadeEmEstoque >= quantidadeDesejada;
+    }
+
+    public void baixarEstoque(int quantidade) {
+        if (temEstoqueDisponivel(quantidade)) {
+            quantidadeEmEstoque -= quantidade;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "[%s] %s - %s - R$ %.2f (%d em estoque)",
+            codigo,
+            nome,
+            descricao,
+            preco,
+            quantidadeEmEstoque
+        );
     }
 }
