@@ -90,3 +90,15 @@ _(Preencher a partir das próximas aulas, conforme o projeto evoluir.)_
 ## Licença
 
 Projeto acadêmico — Faculdade de Tecnologia SENAI "Antonio Adolpho Lobbe". 
+
+## Regra para produtos repetidos
+
+Quando o mesmo produto é adicionado mais de uma vez ao mesmo pedido, o sistema mantém os produtos como itens separados.
+
+Cada chamada ao método `adicionarItem()` cria um novo `ItemPedido`, mesmo que o produto já esteja presente no pedido.
+
+Exemplo:
+
+```java
+pedido.adicionarItem(produto, 2);
+pedido.adicionarItem(produto, 3);
