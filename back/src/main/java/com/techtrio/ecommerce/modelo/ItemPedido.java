@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 
 public class ItemPedido {
 
-    private Produto produto;
+    private final Produto produto;
     private int quantidade;
-    private BigDecimal preco;
+    private final BigDecimal preco;
 
     public ItemPedido(Produto produto, int quantidade, BigDecimal preco) {
 

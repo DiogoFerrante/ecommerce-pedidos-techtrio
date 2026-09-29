@@ -14,17 +14,20 @@ public class Pedido {
     private String data;
     private String situacao;
 
-    // Composição: Pedido controla os ItemPedido
+    // Composição: Pedido controla o ciclo de vida dos ItemPedido
     private final List<ItemPedido> itens;
 
-    // Associação: Pedido pode ter uma FormaPagamento
+    // Associação: FormaPagamento é opcional
     private FormaPagamento formaPagamento;
 
     public Pedido(String numero, Cliente cliente, String data, String situacao) {
+
         setNumero(numero);
 
         if (cliente == null) {
-            throw new IllegalArgumentException("Pedido exige um cliente");
+            throw new IllegalArgumentException(
+                    "Pedido exige um cliente"
+            );
         }
 
         this.cliente = cliente;
@@ -53,11 +56,13 @@ public class Pedido {
         return formaPagamento;
     }
 
+    // Protege a lista contra alterações externas
     public List<ItemPedido> getItens() {
         return Collections.unmodifiableList(itens);
     }
 
     public void setNumero(String numero) {
+
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException(
                     "Número do pedido é obrigatório"
@@ -71,7 +76,12 @@ public class Pedido {
         this.situacao = situacao;
     }
 
-    // Composição: o próprio Pedido cria o ItemPedido
+    /*
+     * COMPOSIÇÃO
+     *
+     * O Pedido cria o próprio ItemPedido.
+     * Quem chama não precisa criar o ItemPedido.
+     */
     public void adicionarItem(Produto produto, int quantidade) {
 
         if (produto == null) {
@@ -80,12 +90,15 @@ public class Pedido {
             );
         }
 
+        // A própria validação do Produto também verifica
+        // quantidade maior que zero.
         if (!produto.temEstoqueDisponivel(quantidade)) {
             throw new IllegalStateException(
                     "Estoque insuficiente: " + produto.getNome()
             );
         }
 
+        // O Pedido cria o ItemPedido.
         ItemPedido item = new ItemPedido(
                 produto,
                 quantidade,
@@ -95,7 +108,12 @@ public class Pedido {
         itens.add(item);
     }
 
-    // Associação com FormaPagamento
+    /*
+     * ASSOCIAÇÃO COM FORMA DE PAGAMENTO
+     *
+     * Um pedido pode receber uma forma de pagamento,
+     * mas não pode ser pago sem possuir itens.
+     */
     public void pagarCom(FormaPagamento formaPagamento) {
 
         if (itens.isEmpty()) {
@@ -113,6 +131,10 @@ public class Pedido {
         this.formaPagamento = formaPagamento;
     }
 
+    /*
+     * Percorre a composição Pedido -> ItemPedido
+     * para calcular o valor total.
+     */
     public BigDecimal calcularValorTotal() {
 
         BigDecimal total = BigDecimal.ZERO;
@@ -126,6 +148,7 @@ public class Pedido {
 
     @Override
     public String toString() {
+
         return "Pedido{" +
                 "numero='" + numero + '\'' +
                 ", cliente=" + cliente.getIdentificacao() +
