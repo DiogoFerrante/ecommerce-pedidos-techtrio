@@ -1,9 +1,8 @@
-
 package com.techtrio.ecommerce.modelo.pagamento;
 
 import java.math.BigDecimal;
 
-public class Boleto extends FormaPagamento {
+public class Boleto extends FormaPagamento implements ProcessadorPagamento {
 
     private String codigoBarras;
 
@@ -18,8 +17,19 @@ public class Boleto extends FormaPagamento {
     }
 
     @Override
-    public void processar() {
-        setSituacao("PAGO");
+    public boolean processar(BigDecimal valor) {
+        System.out.println("Gerando boleto de R$ " + valor);
+        return false;
+    }
+
+    @Override
+    public String getComprovante() {
+        return "BOLETO-" + codigoBarras;
+    }
+
+    @Override
+    public String getDescricao() {
+        return "Boleto - código " + codigoBarras;
     }
 
     @Override

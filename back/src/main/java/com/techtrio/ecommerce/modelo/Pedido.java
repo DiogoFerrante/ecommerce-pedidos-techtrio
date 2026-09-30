@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.techtrio.ecommerce.modelo.pagamento.FormaPagamento;
+import com.techtrio.ecommerce.modelo.pagamento.ProcessadorPagamento;
 
 public class Pedido {
 
@@ -14,10 +15,8 @@ public class Pedido {
     private String data;
     private String situacao;
 
-    // Composição: Pedido controla o ciclo de vida dos ItemPedido
     private final List<ItemPedido> itens;
 
-    // Associação: FormaPagamento é opcional
     private FormaPagamento formaPagamento;
 
     public Pedido(String numero, Cliente cliente, String data, String situacao) {
@@ -56,7 +55,6 @@ public class Pedido {
         return formaPagamento;
     }
 
-    // Protege a lista contra alterações externas
     public List<ItemPedido> getItens() {
         return Collections.unmodifiableList(itens);
     }
@@ -76,12 +74,6 @@ public class Pedido {
         this.situacao = situacao;
     }
 
-    /*
-     * COMPOSIÇÃO
-     *
-     * O Pedido cria o próprio ItemPedido.
-     * Quem chama não precisa criar o ItemPedido.
-     */
     public void adicionarItem(Produto produto, int quantidade) {
 
         if (produto == null) {
@@ -90,15 +82,12 @@ public class Pedido {
             );
         }
 
-        // A própria validação do Produto também verifica
-        // quantidade maior que zero.
         if (!produto.temEstoqueDisponivel(quantidade)) {
             throw new IllegalStateException(
                     "Estoque insuficiente: " + produto.getNome()
             );
         }
 
-        // O Pedido cria o ItemPedido.
         ItemPedido item = new ItemPedido(
                 produto,
                 quantidade,
@@ -108,13 +97,11 @@ public class Pedido {
         itens.add(item);
     }
 
-    /*
-     * ASSOCIAÇÃO COM FORMA DE PAGAMENTO
-     *
-     * Um pedido pode receber uma forma de pagamento,
-     * mas não pode ser pago sem possuir itens.
-     */
-    public void pagarCom(FormaPagamento formaPagamento) {
+    public void adicionarItem(Produto produto) {
+        adicionarItem(produto, 1);
+    }
+
+    public void pagar(ProcessadorPagamento processador) {
 
         if (itens.isEmpty()) {
             throw new IllegalStateException(
@@ -122,19 +109,21 @@ public class Pedido {
             );
         }
 
-        if (formaPagamento == null) {
+        if (processador == null) {
             throw new IllegalArgumentException(
-                    "Forma de pagamento é obrigatória"
+                    "Processador de pagamento é obrigatório"
             );
         }
 
-        this.formaPagamento = formaPagamento;
+        BigDecimal valorTotal = calcularValorTotal();
+
+        boolean aprovado = processador.processar(valorTotal);
+
+        if (aprovado) {
+            setSituacao("PAGO");
+        }
     }
 
-    /*
-     * Percorre a composição Pedido -> ItemPedido
-     * para calcular o valor total.
-     */
     public BigDecimal calcularValorTotal() {
 
         BigDecimal total = BigDecimal.ZERO;
