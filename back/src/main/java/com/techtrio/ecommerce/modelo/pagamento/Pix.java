@@ -1,42 +1,35 @@
+
 package com.techtrio.ecommerce.modelo.pagamento;
 
 import java.math.BigDecimal;
 
 public class Pix extends FormaPagamento {
 
-    private String chave;
+    private String chavePix;
 
-    public Pix(BigDecimal valor, String chave) {
+    public Pix(BigDecimal valor, String chavePix) {
         super(valor);
-        setChave(chave);
-    }
 
-    public String getChave() {
-        return chave;
-    }
-
-    public void setChave(String chave) {
-        if (chave == null || chave.isBlank()) {
-            throw new IllegalArgumentException(
-                    "Chave Pix é obrigatória"
-            );
+        if (chavePix == null || chavePix.isBlank()) {
+            throw new IllegalArgumentException("A chave Pix não pode ser vazia.");
         }
 
-        this.chave = chave;
+        this.chavePix = chavePix;
     }
 
     @Override
-    public boolean processar() {
-        System.out.println(
-                "Processando Pix para a chave " + chave
-        );
-
-        return true;
+    public void processar() {
+        setSituacao("PAGO");
     }
 
     @Override
     public String getResumo() {
-        return super.getResumo() +
-                " (chave " + chave + ")";
+        return "Pagamento via Pix - Valor: R$ " + getValor()
+                + " - Chave: " + chavePix
+                + " - Situação: " + getSituacao();
+    }
+
+    public String getChavePix() {
+        return chavePix;
     }
 }

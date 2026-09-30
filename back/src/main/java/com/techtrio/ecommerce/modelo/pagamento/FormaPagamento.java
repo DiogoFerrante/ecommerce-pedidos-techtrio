@@ -1,33 +1,34 @@
+
 package com.techtrio.ecommerce.modelo.pagamento;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public abstract class FormaPagamento {
 
     private BigDecimal valor;
-    private LocalDateTime dataDoPagamento;
+    private LocalDate dataDoPagamento;
     private String situacao;
 
-    protected FormaPagamento(BigDecimal valor) {
-        setValor(valor);
-    }
-
-    public void setValor(BigDecimal valor) {
+    public FormaPagamento(BigDecimal valor) {
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException(
-                    "Valor do pagamento deve ser positivo"
-            );
+            throw new IllegalArgumentException("O valor deve ser maior que zero.");
         }
 
         this.valor = valor;
+        this.dataDoPagamento = LocalDate.now();
+        this.situacao = "PENDENTE";
     }
+
+    public abstract void processar();
+
+    public abstract String getResumo();
 
     public BigDecimal getValor() {
         return valor;
     }
 
-    public LocalDateTime getDataDoPagamento() {
+    public LocalDate getDataDoPagamento() {
         return dataDoPagamento;
     }
 
@@ -35,13 +36,7 @@ public abstract class FormaPagamento {
         return situacao;
     }
 
-    public abstract boolean processar();
-
-    public String getResumo() {
-        return String.format(
-                "%s no valor de R$ %s",
-                getClass().getSimpleName(),
-                valor
-        );
+    protected void setSituacao(String situacao) {
+        this.situacao = situacao;
     }
 }
