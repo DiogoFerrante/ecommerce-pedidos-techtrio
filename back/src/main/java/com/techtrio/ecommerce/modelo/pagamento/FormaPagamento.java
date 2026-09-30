@@ -20,7 +20,6 @@ public abstract class FormaPagamento {
         this.situacao = "PENDENTE";
     }
 
-    public abstract void processar();
 
     public abstract String getResumo();
 

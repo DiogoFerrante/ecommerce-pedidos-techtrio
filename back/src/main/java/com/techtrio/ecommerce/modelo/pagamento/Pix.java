@@ -1,9 +1,8 @@
-
 package com.techtrio.ecommerce.modelo.pagamento;
 
 import java.math.BigDecimal;
 
-public class Pix extends FormaPagamento {
+public class Pix extends FormaPagamento implements ProcessadorPagamento {
 
     private String chavePix;
 
@@ -18,8 +17,20 @@ public class Pix extends FormaPagamento {
     }
 
     @Override
-    public void processar() {
+    public boolean processar(BigDecimal valor) {
         setSituacao("PAGO");
+        System.out.println("Enviando cobrança Pix para a chave " + chavePix);
+        return true;
+    }
+
+    @Override
+    public String getComprovante() {
+        return "PIX-" + System.currentTimeMillis();
+    }
+
+    @Override
+    public String getDescricao() {
+        return "Pix - chave " + chavePix;
     }
 
     @Override
